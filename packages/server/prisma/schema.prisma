@@ -14,4 +14,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Add DB models here
+model User {
+  id         String      @id @default(uuid())
+  username   String
+  createdAt  DateTime    @default(now())
+  chatGroups ChatGroup[] @relation("ChatGroupUser")
+  messages   Message[]
+}
+
+model ChatGroup {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  users     User[]    @relation("ChatGroupUser")
+  messages  Message[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  chatGroup   ChatGroup @relation(fields: [chatGroupId], references: [id])
+  chatGroupId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}

@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "npm run db:dev && tsc --watch & nodemon index.ts",
+    "dev": "prisma:generate && npm run db:dev && tsc --watch & nodemon index.ts",
     "db:dev": "docker compose up -d",
     "prisma:generate": "npx prisma generate",
     "prisma:create": "npx prisma migrate dev --create-only",
