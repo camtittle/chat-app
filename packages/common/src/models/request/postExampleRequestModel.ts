@@ -1,7 +1,8 @@
 import z from 'zod'
 
-export const postExampleRequestSchema = z.object({
+export const postChatGroupSchema = z.object({
+  id: z.string().uuid(),
   name: z.string().min(1, 'Name is required'),
 })
 
-export type PostExampleRequestModel = z.infer<typeof postExampleRequestSchema>
+export type PostExampleRequestModel = z.infer<typeof postChatGroupSchema>
