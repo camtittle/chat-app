@@ -2,9 +2,11 @@
 
 ## Approach
 
-I've focused on implementing an architecture suitable for an offline-first application. The FE uses IndexedDB as a source of truth, to ensure data is persisted while network is unavailable. While online, requests are made to sync this DB with the server. The next step would be to add a service worker to handle queueing up requests when offline - this could be achieved using the Background Sync API.
+I've focused on implementing an architecture suitable for an offline-first application. The FE uses IndexedDB as a source of truth, to ensure data is persisted while network is unavailable. While online, requests are made to sync this DB with the server. 
 
-I have forgone the implementation of any tests in favour of providing a solid foundation for the app. The testing approach I would take is:
+React-query is used to make network requests - it will automatically pause outgoing requests when network is unavailable, and resume them once network returns. This is great however the outgoing requests are not persisted anywhere. The next step would be to add a service worker to handle queueing up requests when offline - this could be achieved using the Background Sync API.
+
+I have forgone the implementation of any tests in favour of delivering a working MVP. The testing approach I would take is:
 
 - A suite of server integration tests using `supertest` which run at the controller level, with a local DB.
 - A suite of front-end tests using `react-testing-library` using a mocked out API
