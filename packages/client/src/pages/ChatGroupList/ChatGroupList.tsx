@@ -1,16 +1,22 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useGetChatGroups, useJoinChatGroup } from "../../repositories/chatGroupRepository"
 import { Button } from "../../components/Button"
 import { Chat } from "../Chat/Chat"
 import { CreateChat } from "./CreateChat"
 import styled from "styled-components"
 import type { ChatGroup } from "@chat-app/common"
+import { useCurrentUser } from "../../contexts/UserContext/UserContext"
 
 export const ChatGroupList = () => {
   const { chatGroups, isFetching } = useGetChatGroups()
   const joinChatGroup = useJoinChatGroup()
+  const { selectedUser } = useCurrentUser()
 
   const [selectedChatGroup, setSelectedChatGroup] = useState<ChatGroup | null>(null)
+
+  useEffect(() => {
+    setSelectedChatGroup(null)
+  }, [selectedUser])
 
   if (isFetching || !chatGroups) {
     return <div>Loading...</div>
@@ -34,7 +40,7 @@ export const ChatGroupList = () => {
         <CreateChat />
       </GroupListContainer>
 
-      {/* TODO use react router for this instead */}
+      {/* TODO setup proper routing */}
       {selectedChatGroup && <Chat chatGroup={selectedChatGroup} />}
     </div>
   )
