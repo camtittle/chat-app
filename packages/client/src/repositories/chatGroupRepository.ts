@@ -28,10 +28,10 @@ export const useGetChatGroups = () => {
     }
   }, [data]) // when new data arrives, push it to the local database
 
-  const useChatGroupsLiveQuery = useLiveQuery(() => db.chatGroups.toArray())
+  const chatGroups = useLiveQuery(() => db.chatGroups.toArray())
 
   return {
-    chatGroups: useChatGroupsLiveQuery,
+    chatGroups,
     isFetching,
   }
 }
@@ -88,8 +88,6 @@ export const useJoinChatGroup = () => {
       if (!response.ok) {
         throw new Error('Failed to join chat group')
       }
-
-      return response.json()
     },
     onError: (error, { chatGroupId }) => {
       console.error(error)

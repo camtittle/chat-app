@@ -1,7 +1,7 @@
 import styled from "styled-components"
-import { useCreateChatGroup } from "../repositories/chatGroupRepository"
-import { Input } from "./Input"
-import { Button } from "./Button"
+import { useCreateChatGroup } from "../../repositories/chatGroupRepository"
+import { Input } from "../../components/Input"
+import { Button } from "../../components/Button"
 import { v4 as uuid } from "uuid"
 import { useState } from "react"
 

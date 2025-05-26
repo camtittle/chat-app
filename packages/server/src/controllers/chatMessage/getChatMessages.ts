@@ -8,7 +8,7 @@ export const getChatMessages = async (req: Request, res: Response) => {
 
   const messages = await chatMessageService.getChatMessages(chatGroupId)
 
-  res.status(201).json(messages.map(message => ({
+  res.status(200).json(messages.map(message => ({
     id: message.id,
     chatGroupId: message.chatGroupId,
     userId: message.userId,

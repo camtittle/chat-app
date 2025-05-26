@@ -7,11 +7,15 @@ export interface ChatGroup {
 }
 
 export interface ChatMessage {
-  id: number
+  id: string
   chatGroupId: string
-  senderId: string
+  userId: string
   content: string
-  sentAt: Date
+  createdAt: string
+  user: {
+    id: string
+    username: string
+  }
 }
 
 export const db = new Dexie('chat-app-db') as Dexie & {
@@ -27,5 +31,5 @@ export const db = new Dexie('chat-app-db') as Dexie & {
 
 db.version(1).stores({
   chatGroups: 'id, name',
-  chatMessages: 'id, chatGroupId'
+  chatMessages: 'id, chatGroupId, createdAt'
 })

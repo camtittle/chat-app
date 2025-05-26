@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { useGetChatGroups, useJoinChatGroup } from "../repositories/chatGroupRepository"
-import { Button } from "../components/Button"
-import type { ChatGroup } from "../repositories/db"
-import { Chat } from "./Chat"
-import { CreateChat } from "../components/CreateChat"
+import { useGetChatGroups, useJoinChatGroup } from "../../repositories/chatGroupRepository"
+import { Button } from "../../components/Button"
+import type { ChatGroup } from "../../repositories/db"
+import { Chat } from "../Chat/Chat"
+import { CreateChat } from "./CreateChat"
 import styled from "styled-components"
 
 export const ChatGroupList = () => {

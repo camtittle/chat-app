@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ChatGroupList } from './pages/ChatGroupList'
+import { ChatGroupList } from './pages/ChatGroupList/ChatGroupList'
 import { Container } from './components/Container'
 import { UserProvider } from './contexts/UserContext/UserProvider'
 import { UserSelector } from './components/UserSelector'
