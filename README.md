@@ -1,4 +1,4 @@
-# Offline first chat app MVP
+# Offline-first chat app MVP
 
 ## Approach
 
@@ -25,6 +25,7 @@ I have forgone the implementation of any tests in favour of providing a solid fo
 
 ### Database
 
+- Make a copy of `.env.example` in the `packages/server` directory and name it `.env`
 - Start local DB by running `npm run db:dev`
   - This will start a Postgres DB in a docker container and run the Prisma migrations against it
 
