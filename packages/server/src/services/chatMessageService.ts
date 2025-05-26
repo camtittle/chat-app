@@ -82,7 +82,7 @@ export const createChatMessage = async ({ userId, chatGroupId, content, id }: Cr
       userId,
       chatGroupId,
       content,
-      createdAt: new Date(),
+      createdAt: new Date(), // TODO have client send timestamp instead to better support messages sent while offline
     },
   })
 

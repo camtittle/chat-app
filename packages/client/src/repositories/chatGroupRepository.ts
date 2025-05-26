@@ -1,20 +1,17 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useEffect } from "react"
-import { db, type ChatGroup } from "./db";
+import { db } from "./db";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { buildApiRoute } from "./utils";
-import type { JoinChatGroupRequestModel, PostChatGroupRequestModel } from "@chat-app/common";
-import { useCurrentUser } from "../contexts/UserContext/UserContext";
+import type { ChatGroup, JoinChatGroupRequestModel, PostChatGroupRequestModel } from "@chat-app/common";
+import { useGet, usePost } from "./api";
 
 export const useGetChatGroups = () => {
+  const get = useGet<ChatGroup[]>('/chats/groups')
+  
   const { data, isFetching } = useQuery<ChatGroup[]>({
     queryKey: ['chatGroups'],
     queryFn: async () => {
-      const response = await fetch(buildApiRoute('/chats/groups'));
-      if (!response.ok) {
-        throw new Error('Failed to fetch chat groups');
-      }
-      return response.json();
+      return get()
     },
   })
 
@@ -37,21 +34,11 @@ export const useGetChatGroups = () => {
 }
 
 export const useCreateChatGroup = () => {
+  const post = usePost('/chats/groups')
+
   const { mutate } = useMutation({
     mutationFn: async (chatGroup: PostChatGroupRequestModel) => {
-      const response = await fetch(buildApiRoute('/chats/groups'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(chatGroup),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create chat group')
-      }
-
-      return response.json()
+      return post(chatGroup)
     },
     onError: (error, chatGroup) => {
       console.error(error)
@@ -65,6 +52,7 @@ export const useCreateChatGroup = () => {
   return useCallback((chatGroup: PostChatGroupRequestModel) => {
     db.chatGroups.add({
       ...chatGroup,
+      createdAt: new Date().toISOString(),
       isMember: false
     }) // optimistically add the new chat group to the local DB
 
@@ -73,21 +61,11 @@ export const useCreateChatGroup = () => {
 }
 
 export const useJoinChatGroup = () => {
-  const { selectedUser } = useCurrentUser()
+  const post = usePost('/chats/groups/join')
 
   const { mutate } = useMutation({
     mutationFn: async (body: JoinChatGroupRequestModel) => {
-      const response = await fetch(buildApiRoute('/chats/groups/join'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to join chat group')
-      }
+      return post(body)
     },
     onError: (error, { chatGroupId }) => {
       console.error(error)
@@ -104,7 +82,6 @@ export const useJoinChatGroup = () => {
   return useCallback((chatGroupId: string) => {
     const body: JoinChatGroupRequestModel = {
       chatGroupId,
-      userId: selectedUser.id
     }
 
     db.chatGroups.update(chatGroupId, {
@@ -112,5 +89,5 @@ export const useJoinChatGroup = () => {
     }) // optimistically update the chat group in the local DB
 
     mutate(body) // also send off to the server
-  }, [mutate, selectedUser.id])
+  }, [mutate])
 }

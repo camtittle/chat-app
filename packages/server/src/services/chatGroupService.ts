@@ -58,6 +58,14 @@ export const addUserToChatGroup = async (chatGroupId: string, userId: string) =>
 
 export const getChatGroups = async () => {
   const chatGroups = await prisma.chatGroup.findMany({
+    include: {
+      users: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
     orderBy: {
       name: 'asc',
     },

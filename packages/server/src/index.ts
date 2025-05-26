@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { postChatGroup, getChatGroups, joinChatGroup, getChatMessages, postChatMessage } from './controllers/index.js'
 import cors from 'cors'
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js'
+import { authMiddleware } from './middleware/authMiddleware.js'
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ app.use(cors({
 }))
 
 app.use(json())
+app.use(authMiddleware)
 
 app.post('/chats/groups', postChatGroup)
 app.get('/chats/groups', getChatGroups)

@@ -4,13 +4,13 @@ import * as chatMessageService from "../../services/chatMessageService.js"
 
 export const postChatMessage = async (req: Request, res: Response) => {
   // Validate request body against the schema
-  const { id, userId, content } = await postChatMessageBodySchema.parseAsync(req.body)
+  const { id, content } = await postChatMessageBodySchema.parseAsync(req.body)
   const { chatGroupId } = await postChatMessageParamsSchema.parseAsync(req.params)
 
   const createdChatMessage = await chatMessageService.createChatMessage({
     id,
     chatGroupId,
-    userId,
+    userId: req.user.id,
     content
   })
 

@@ -1,29 +1,27 @@
 import type { ChatMessage, PostChatMessageRequestModel } from "@chat-app/common"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { buildApiRoute } from "./utils"
 import { useCallback, useEffect } from "react"
 import { db } from "./db"
 import { useLiveQuery } from "dexie-react-hooks"
 import { useCurrentUser } from "../contexts/UserContext/UserContext"
+import { useGet, usePost } from "./api"
 
 export const useGetChatMessages = (chatGroupId: string) => {
+  const get = useGet<ChatMessage[]>(`/chats/groups/${chatGroupId}/messages`)
+
   const { data, isFetching } = useQuery<ChatMessage[]>({
     queryKey: ['chatMessages', chatGroupId],
     queryFn: async () => {
-      const response = await fetch(buildApiRoute(`/chats/groups/${chatGroupId}/messages`))
-      if (!response.ok) {
-        throw new Error('Failed to fetch chat messages')
-      }
-      return response.json()
+      return get()
     },
-    refetchInterval: 1000, // refetch every second. in future could use a webhook instead of polling
+    refetchInterval: 5000, // refetch every 5 seconds. in future could use a webhook instead of polling
   })
 
   useEffect(() => {
     if (data) {
-      db.chatMessages.bulkAdd(data)
-      const messageIdsToKeep = new Set(data.map(message => message.id))
+      db.chatMessages.bulkPut(data)
       // delete any messages that are not in the new data
+      const messageIdsToKeep = new Set(data.map(message => message.id))
       db.chatMessages.where('chatGroupId').equals(chatGroupId)
         .filter(message => !messageIdsToKeep.has(message.id))
         .delete()
@@ -41,26 +39,14 @@ export const useGetChatMessages = (chatGroupId: string) => {
 type CreateMessageParams = Pick<PostChatMessageRequestModel, 'id' | 'content'>
 
 export const useCreateChatMessage = (chatGroupId: string) => {
+  const post = usePost(`/chats/groups/${chatGroupId}/messages`)
   const { selectedUser } = useCurrentUser()
 
   const { mutate } = useMutation({
     mutationFn: async (message: CreateMessageParams) => {
-      const response = await fetch(buildApiRoute(`/chats/groups/${chatGroupId}/messages`), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...message,
-          userId: selectedUser.id,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send message')
-      }
-
-      return response.json()
+      return post({
+        ...message,
+      })
     },
     onError: (error, message) => {
       console.error(error)

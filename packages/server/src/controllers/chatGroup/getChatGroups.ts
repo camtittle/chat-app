@@ -1,12 +1,16 @@
 import { Request, Response } from "express"
 import * as chatGroupService from "../../services/chatGroupService.js"
+import { ChatGroup } from "@chat-app/common"
 
-export const getChatGroups = async (_req: Request, res: Response) => {
+export const getChatGroups = async (req: Request, res: Response) => {
   const chatGroups = await chatGroupService.getChatGroups()
 
-  res.status(200).json(chatGroups.map(group => ({
+  const response: ChatGroup[] = chatGroups.map(group => ({
     id: group.id,
     name: group.name,
-    createdAt: group.createdAt, 
-  })))
+    createdAt: group.createdAt.toISOString(),
+    isMember: group.users.some(user => user.id === req.user.id),
+  }))
+
+  res.status(200).json(response)
 }
