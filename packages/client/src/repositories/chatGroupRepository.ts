@@ -3,6 +3,7 @@ import { useCallback, useEffect } from "react"
 import { db, type ChatGroup } from "./db";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { buildApiRoute } from "./utils";
+import type { PostChatGroupRequestModel } from "@chat-app/common";
 
 export const useGetChatGroups = () => {
   const { data, isFetching } = useQuery<ChatGroup[]>({
@@ -18,7 +19,7 @@ export const useGetChatGroups = () => {
 
   useEffect(() => {
     if (data) {
-      // overwriting everything for now - could be more strategic and only updated changed items
+      // overwriting everything for now - could be more strategic and only update changed items
       db.chatGroups.clear()
         .then(() => {
           return db.chatGroups.bulkAdd(data)
@@ -37,7 +38,7 @@ export const useGetChatGroups = () => {
 export const useCreateChatGroup = () => {
   const { mutate } = useMutation({
     networkMode: 'offlineFirst',
-    mutationFn: async (chatGroup: ChatGroup) => {
+    mutationFn: async (chatGroup: PostChatGroupRequestModel) => {
       const response = await fetch(buildApiRoute('/chats/groups'), {
         method: 'POST',
         headers: {
@@ -62,8 +63,12 @@ export const useCreateChatGroup = () => {
     },
   })
 
-  return useCallback((chatGroup: ChatGroup) => {
-    db.chatGroups.add(chatGroup) // optimistically add the new chat group to the local DB
+  return useCallback((chatGroup: PostChatGroupRequestModel) => {
+    db.chatGroups.add({
+      ...chatGroup,
+      isMember: false
+    }) // optimistically add the new chat group to the local DB
+    
     mutate(chatGroup) // also send off to the server
   }, [mutate])
 }

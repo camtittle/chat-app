@@ -14,7 +14,6 @@ export const CreateChat = () => {
     postChatGroup({
       id: uuid(),
       name: chatName,
-      isMember: true, // don't think we need this
     })
   }
 

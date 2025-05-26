@@ -5,4 +5,4 @@ export const postChatGroupSchema = z.object({
   name: z.string().min(1, 'Name is required'),
 })
 
-export type PostExampleRequestModel = z.infer<typeof postChatGroupSchema>
+export type PostChatGroupRequestModel = z.infer<typeof postChatGroupSchema>
