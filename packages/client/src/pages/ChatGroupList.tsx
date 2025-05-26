@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useGetChatGroups } from "../repositories/chatGroupRepository"
+import { useGetChatGroups, useJoinChatGroup } from "../repositories/chatGroupRepository"
 import { Button } from "../components/Button"
 import type { ChatGroup } from "../repositories/db"
 import { Chat } from "./Chat"
@@ -8,8 +8,8 @@ import styled from "styled-components"
 
 export const ChatGroupList = () => {
   const { chatGroups, isFetching } = useGetChatGroups()
+  const joinChatGroup = useJoinChatGroup()
 
-  // TODO: use react router for this instead
   const [selectedChatGroup, setSelectedChatGroup] = useState<ChatGroup | null>(null)
 
   if (isFetching || !chatGroups) {
@@ -17,6 +17,7 @@ export const ChatGroupList = () => {
   }
 
   const handleClickChatGroup = (chatGroup: ChatGroup) => {
+    joinChatGroup(chatGroup.id)
     setSelectedChatGroup(chatGroup)
   }
 
@@ -33,6 +34,7 @@ export const ChatGroupList = () => {
         <CreateChat />
       </GroupListContainer>
 
+      {/* TODO use react router for this instead */}
       {selectedChatGroup && <Chat chatGroup={selectedChatGroup} />}
     </div>
   )

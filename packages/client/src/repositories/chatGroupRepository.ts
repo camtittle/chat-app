@@ -3,7 +3,8 @@ import { useCallback, useEffect } from "react"
 import { db, type ChatGroup } from "./db";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { buildApiRoute } from "./utils";
-import type { PostChatGroupRequestModel } from "@chat-app/common";
+import type { JoinChatGroupRequestModel, PostChatGroupRequestModel } from "@chat-app/common";
+import { useCurrentUser } from "../contexts/UserContext/UserContext";
 
 export const useGetChatGroups = () => {
   const { data, isFetching } = useQuery<ChatGroup[]>({
@@ -37,7 +38,6 @@ export const useGetChatGroups = () => {
 
 export const useCreateChatGroup = () => {
   const { mutate } = useMutation({
-    networkMode: 'offlineFirst',
     mutationFn: async (chatGroup: PostChatGroupRequestModel) => {
       const response = await fetch(buildApiRoute('/chats/groups'), {
         method: 'POST',
@@ -70,4 +70,49 @@ export const useCreateChatGroup = () => {
 
     mutate(chatGroup) // also send off to the server
   }, [mutate])
+}
+
+export const useJoinChatGroup = () => {
+  const { selectedUser } = useCurrentUser()
+
+  const { mutate } = useMutation({
+    mutationFn: async (body: JoinChatGroupRequestModel) => {
+      const response = await fetch(buildApiRoute('/chats/groups/join'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to join chat group')
+      }
+
+      return response.json()
+    },
+    onError: (error, { chatGroupId }) => {
+      console.error(error)
+      // undo the optimistic update
+      // TODO: we probably want some better error handling here. We're assuming that when the request fails, we are not longer
+      // a member of the chat group, but that might not be the case.
+      db.chatGroups.update(chatGroupId, {
+        isMember: false
+      })
+      // TODO show a toast error message
+    },
+  })
+
+  return useCallback((chatGroupId: string) => {
+    const body: JoinChatGroupRequestModel = {
+      chatGroupId,
+      userId: selectedUser.id
+    }
+
+    db.chatGroups.update(chatGroupId, {
+      isMember: true
+    }) // optimistically update the chat group in the local DB
+
+    mutate(body) // also send off to the server
+  }, [mutate, selectedUser.id])
 }

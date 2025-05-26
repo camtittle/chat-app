@@ -6,5 +6,5 @@ export const joinChatGroup = async (req: Request, res: Response) => {
   // Validate request body against the schema
   const { chatGroupId, userId } = await joinChatGroupRequestSchema.parseAsync(req.body)
   await chatGroupService.addUserToChatGroup(chatGroupId, userId)
-  res.status(200)
+  res.status(200).send()
 }

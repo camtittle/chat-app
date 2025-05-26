@@ -1,14 +1,16 @@
 {
   "name": "@chat-app/server",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/server/src/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run prisma:build",
     "start": "node dist",
-    "dev": "npm run build && npm run prisma:generate && npm run db:dev && tsc --watch & nodemon dist",
-    "db:dev": "docker compose up -d && npm run prisma:migrate",
+    "dev": "npm run build && npm run prisma:generate && npm run db:dev && tsc-watch --onSuccess \"npm run prisma:build\" & nodemon dist/server/src",
+    "db:dev": "docker compose up -d && npm run prisma:migrate && npm run db:seed",
+    "db:seed": "npm run build && node ./dist/server/src/scripts/seedDb.js",
     "prisma:generate": "npx prisma generate",
+    "prisma:build": "cp -r ./src/generated ./dist/server/src",
     "prisma:create": "npx prisma migrate dev --create-only",
     "prisma:migrate": "npx prisma migrate dev"
   },
@@ -28,6 +30,7 @@
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsc-alias": "^1.8.16",
     "tsc-watch": "^6.3.1",
