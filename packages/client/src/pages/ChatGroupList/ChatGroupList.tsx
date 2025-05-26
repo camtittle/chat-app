@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useGetChatGroups, useJoinChatGroup } from "../../repositories/chatGroupRepository"
 import { Button } from "../../components/Button"
-import type { ChatGroup } from "../../repositories/db"
 import { Chat } from "../Chat/Chat"
 import { CreateChat } from "./CreateChat"
 import styled from "styled-components"
+import type { ChatGroup } from "@chat-app/common"
 
 export const ChatGroupList = () => {
   const { chatGroups, isFetching } = useGetChatGroups()

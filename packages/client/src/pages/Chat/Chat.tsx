@@ -1,8 +1,8 @@
 import { ChatMessage } from "./ChatMessage"
 import { useCreateChatMessage, useGetChatMessages } from "../../repositories/chatMessageRepository"
-import type { ChatGroup } from "../../repositories/db"
 import { v4 as uuid } from "uuid"
 import { ChatMessageForm } from "./ChatMessageForm"
+import type { ChatGroup } from "@chat-app/common"
 
 type ChatProps = {
   chatGroup: ChatGroup
