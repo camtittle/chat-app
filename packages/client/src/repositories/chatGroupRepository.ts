@@ -2,12 +2,13 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useEffect } from "react"
 import { db, type ChatGroup } from "./db";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { buildApiRoute } from "./utils";
 
 export const useGetChatGroups = () => {
   const { data, isFetching } = useQuery<ChatGroup[]>({
     queryKey: ['chatGroups'],
     queryFn: async () => {
-      const response = await fetch('/api/chat-groups');
+      const response = await fetch(buildApiRoute('/chats/groups'));
       if (!response.ok) {
         throw new Error('Failed to fetch chat groups');
       }
@@ -37,7 +38,7 @@ export const useCreateChatGroup = () => {
   const { mutate } = useMutation({
     networkMode: 'offlineFirst',
     mutationFn: async (chatGroup: ChatGroup) => {
-      const response = await fetch('/api/chat-groups', {
+      const response = await fetch(buildApiRoute('/chats/groups'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

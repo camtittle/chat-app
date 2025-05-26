@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "prisma:generate && npm run db:dev && tsc --watch & nodemon index.ts",
+    "build": "tsc",
+    "start": "node dist",
+    "dev": "npm run build && npm run prisma:generate && npm run db:dev && tsc --watch & nodemon dist",
     "db:dev": "docker compose up -d",
     "prisma:generate": "npx prisma generate",
     "prisma:create": "npx prisma migrate dev --create-only",
@@ -15,8 +15,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^6.8.2",
     "@chat-app/common": "*",
+    "@prisma/client": "^6.8.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
