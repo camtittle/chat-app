@@ -1,6 +1,6 @@
 import { postChatGroupSchema } from "@chat-app/common";
 import { Request, Response } from "express";
-import * as chatGroupService from "../../services/index.js"
+import * as chatGroupService from "../../services/chatGroupService.js"
 
 export const postChatGroup = async (req: Request, res: Response) => {
   const body = await postChatGroupSchema.parseAsync(req.body); // Validate request body against the schema

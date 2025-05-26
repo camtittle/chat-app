@@ -1,18 +1,23 @@
-import { postChatGroupSchema } from "@chat-app/common";
+import { postChatMessageSchema } from "@chat-app/common";
 import { Request, Response } from "express";
-import * as chatGroupService from "../../services/index.js"
+import * as chatMessageService from "../../services/chatMessageService.js"
 
 export const postChatMessage = async (req: Request, res: Response) => {
-  const body = await postChatGroupSchema.parseAsync(req.body); // Validate request body against the schema
+  // Validate request body against the schema
+  const { id, chatGroupId, userId, content } = await postChatMessageSchema.parseAsync(req.body)
 
-  // TODO: add createdBy to chat group
-  const createdChatGroup = await chatGroupService.createChatGroup({
-    id: body.id,
-    name: body.name,
+  const createdChatMessage = await chatMessageService.createChatMessage({
+    id,
+    chatGroupId,
+    userId,
+    content
   })
 
   res.status(201).json({
-    id: createdChatGroup.id,
-    name: createdChatGroup.name,
+    id: createdChatMessage.id,
+    chatGroupId: createdChatMessage.chatGroupId,
+    userId: createdChatMessage.userId,
+    createdAt: createdChatMessage.createdAt,
+    content: createdChatMessage.content,
   })
 }

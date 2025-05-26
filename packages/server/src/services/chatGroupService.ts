@@ -25,6 +25,37 @@ export const createChatGroup = async (chatGroup: CreateChatGroupParams) => {
   return newChatGroup
 }
 
+export const addUserToChatGroup = async (chatGroupId: string, userId: string) => {
+  if (!chatGroupId || !userId) {
+    throw new Error("Chat group ID and user ID are required")
+  }
+
+  const chatGroup = await prisma.chatGroup.findUnique({
+    where: { id: chatGroupId },
+  })
+
+  if (!chatGroup) {
+    throw new Error(`Chat group with id ${chatGroupId} does not exist`)
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  })
+
+  if (!user) {
+    throw new Error(`User with id ${userId} does not exist`)
+  }
+
+  await prisma.chatGroup.update({
+    where: { id: chatGroupId },
+    data: {
+      users: {
+        connect: { id: userId },
+      },
+    },
+  })
+}
+
 export const getChatGroups = async () => {
   const chatGroups = await prisma.chatGroup.findMany({
     orderBy: {

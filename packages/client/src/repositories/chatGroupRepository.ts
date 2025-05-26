@@ -53,7 +53,6 @@ export const useCreateChatGroup = () => {
 
       return response.json()
     },
-    // TODO make sure online mode set correct so this doesn't just error immediately when offline
     onError: (error, chatGroup) => {
       console.error(error)
       // delete any entities created optimistically
@@ -68,7 +67,7 @@ export const useCreateChatGroup = () => {
       ...chatGroup,
       isMember: false
     }) // optimistically add the new chat group to the local DB
-    
+
     mutate(chatGroup) // also send off to the server
   }, [mutate])
 }
