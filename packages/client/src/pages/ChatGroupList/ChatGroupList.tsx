@@ -18,12 +18,14 @@ export const ChatGroupList = () => {
     setSelectedChatGroup(null)
   }, [selectedUser])
 
-  if (isFetching || !chatGroups) {
+  if (isFetching && !chatGroups) {
     return <div>Loading...</div>
   }
 
-  const handleClickChatGroup = (chatGroup: ChatGroup) => {
-    joinChatGroup(chatGroup.id)
+  const handleClickChatGroup = (chatGroup: ChatGroup) => { 
+    if (!chatGroup.isMember) {
+      joinChatGroup(chatGroup.id)
+    }
     setSelectedChatGroup(chatGroup)
   }
 
@@ -32,7 +34,7 @@ export const ChatGroupList = () => {
       <h1>Chat Groups</h1>
       <h2>Select a group to join</h2>
       <GroupListContainer>
-        {chatGroups.map((group) => (
+        {chatGroups?.map((group) => (
           <Button key={group.id} onClick={() => handleClickChatGroup(group)}>
             {group.name}
           </Button>
