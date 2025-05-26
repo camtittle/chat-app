@@ -6,7 +6,7 @@
     "build": "tsc",
     "start": "node dist",
     "dev": "npm run build && npm run prisma:generate && npm run db:dev && tsc --watch & nodemon dist",
-    "db:dev": "docker compose up -d",
+    "db:dev": "docker compose up -d && npm run prisma:migrate",
     "prisma:generate": "npx prisma generate",
     "prisma:create": "npx prisma migrate dev --create-only",
     "prisma:migrate": "npx prisma migrate dev"
