@@ -1,8 +1,8 @@
 import express, { Application, json } from 'express'
 import dotenv from 'dotenv'
-import { postChatGroup, getChatGroups } from './controllers'
+import { postChatGroup, getChatGroups } from './controllers/index.js'
 import cors from 'cors'
-import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware'
+import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js'
 
 dotenv.config()
 

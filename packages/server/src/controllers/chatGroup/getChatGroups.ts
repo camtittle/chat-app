@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import * as chatGroupService from "../../services"
+import * as chatGroupService from "../../services/index.js"
 
 export const getChatGroups = async (_req: Request, res: Response) => {
   const chatGroups = await chatGroupService.getChatGroups()

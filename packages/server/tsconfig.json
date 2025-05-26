@@ -4,11 +4,14 @@
 
   "compilerOptions": {
     "lib": ["es2023"],
-    "module": "CommonJS",
+    "module": "NodeNext",
     "target": "es2022",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "outDir": "./dist",
+    "paths": {
+      "@chat-app/common": ["../common/src/index.ts"]
+    }
   }
 }

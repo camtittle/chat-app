@@ -1,1 +1,1 @@
-export * from './postExampleRequestModel'
+export * from './postExampleRequestModel.js'

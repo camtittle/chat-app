@@ -1,1 +1,1 @@
-export * from './chatGroup'
+export * from './chatGroup/index.js'
