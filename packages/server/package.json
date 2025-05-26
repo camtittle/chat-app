@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && npm run prisma:build",
     "start": "node dist",
-    "dev": "npm run build && npm run prisma:generate && npm run db:dev && tsc-watch --onSuccess \"npm run prisma:build\" & nodemon dist/server/src",
+    "dev": "npm run build && npm run prisma:generate && tsc-watch --onSuccess \"npm run prisma:build\" & nodemon dist/server/src",
     "db:dev": "docker compose up -d && npm run prisma:migrate && npm run db:seed",
     "db:seed": "npm run build && node ./dist/server/src/scripts/seedDb.js",
     "prisma:generate": "npx prisma generate",

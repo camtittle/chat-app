@@ -22,10 +22,8 @@ export const ChatGroupList = () => {
     return <div>Loading...</div>
   }
 
-  const handleClickChatGroup = (chatGroup: ChatGroup) => { 
-    if (!chatGroup.isMember) {
-      joinChatGroup(chatGroup.id)
-    }
+  const handleClickChatGroup = (chatGroup: ChatGroup) => {
+    joinChatGroup(chatGroup.id) // TODO only call this if user is not already in the group
     setSelectedChatGroup(chatGroup)
   }
 

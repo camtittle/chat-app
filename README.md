@@ -28,7 +28,7 @@ I have forgone the implementation of any tests in favour of delivering a working
 ### Database
 
 - Make a copy of `.env.example` in the `packages/server` directory and name it `.env`
-- Start local DB by running `npm run db:dev`
+- Start local DB by running `npm run db:dev -w=@chat-app/server`
   - This will start a Postgres DB in a docker container and run the Prisma migrations against it
 
 ### Running the app
