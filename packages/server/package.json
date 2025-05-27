@@ -4,7 +4,7 @@
   "main": "dist/server/src/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc && npm run prisma:build",
+    "build": "npm run prisma:generate && tsc && npm run prisma:build",
     "start": "node dist",
     "dev": "npm run build && npm run prisma:generate && tsc-watch --onSuccess \"npm run prisma:build\" & nodemon dist/server/src",
     "db:dev": "docker compose up -d && npm run prisma:migrate && npm run db:seed",
